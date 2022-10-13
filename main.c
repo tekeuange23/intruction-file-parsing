@@ -11,56 +11,74 @@ int main(int argc, char **argv)
   /***********************************************************/
   /*      1- user enter the file name                        */
   /***********************************************************/
-  // printf("Enter the filename: ");
-  // scanf("%s", filename);
-  printf("Filename: %s\n", filename);
+  {
+    // printf("Enter the filename: ");
+    // scanf("%s", filename);
+    printf("Filename: %s\n", filename);
+  }
 
   /***********************************************************/
   /*      2- file reading    (read only mode)                */
   /***********************************************************/
-  file = fopen(filename, "r");
-  if ((file == NULL))
   {
-    fprintf(stderr, "\nError opened file \"%s\"\n", filename);
-    exit(1);
+    file = fopen(filename, "r");
+    if ((file == NULL))
+    {
+      fprintf(stderr, "\nError opened file \"%s\"\n", filename);
+      exit(1);
+    }
   }
 
   /***********************************************************/
   /*      2 & 3a- file reading    (read only mode)           */
   /***********************************************************/
   printf("Parsing ...\n");
-
   int collection_iterator = 1;
   char c;
-  for (c = getc(file); c != EOF; c = getc(file)) // count the total line in the file
   {
-    // printf("%c", c);
-    if (c == '\n')
-      collection_iterator++;
+    for (c = getc(file); c != EOF; c = getc(file)) // count the total line in the file
+    {
+      // printf("%c", c);
+      if (c == '\n')
+        collection_iterator++;
+    }
+    printf("======== Size : %d =======\n", collection_iterator);
   }
-  printf("======== Size : %d =======\n", collection_iterator);
 
+  // char buffer[collection_iterator][100];
   Collection *collection = (Collection *)malloc(collection_iterator * sizeof(Collection));
   if (collection == NULL)
     exit(0);
-  // Student *collection[i] = NULL;
   int i = 0;
+
   fseek(file, 0, SEEK_SET); // replace the cusor at the begining of the file
 
   printf("======== Reading ========= ...\n");
-  while (!feof(file) && i < collection_iterator)
   {
-    collection[i] = (Student *)malloc(sizeof(Student));
-    collection[i]->name = (char *)malloc(NAME_LENGTH * sizeof(char));
-    if (collection[i] == NULL || collection[i]->name == NULL)
-      exit(0);
+    while (!feof(file) && i < collection_iterator)
+    {
+      collection[i] = (Operation *)malloc(sizeof(Operation));
+      collection[i]->info.unaryOp.opName = (char *)malloc(OP_NAME_LENGTH * sizeof(char));
+      collection[i]->type = "unary";
+      if (collection[i] == NULL || collection[i]->type == NULL || collection[i]->info.unaryOp.opName == NULL)
+        exit(0);
 
-    fscanf(file, "%d, %d, %d, %d, %d, %d, %d, %s", &(collection[i]->id), &(collection[i]->scores[0]), &(collection[i]->scores[1]), &(collection[i]->scores[2]), &(collection[i]->scores[3]), &(collection[i]->scores[4]), &(collection[i]->scores[5]), collection[i]->name);
-    i++;
+      fscanf(file, "[#%d, #%d, #%d, #%d, #%d, #%d]; { %s }\n",
+             &(collection[i]->info.unaryOp.param.array[0]),
+             &(collection[i]->info.unaryOp.param.array[1]),
+             &(collection[i]->info.unaryOp.param.array[2]),
+             &(collection[i]->info.unaryOp.param.array[3]),
+             &(collection[i]->info.unaryOp.param.array[4]),
+             &(collection[i]->info.unaryOp.param.array[5]),
+             collection[i]->info.unaryOp.opName);
+      i++;
+    }
   }
 
   printf("======== Printing ========\n");
-  show_students(collection, collection_iterator);
+  {
+    show_operations(collection, collection_iterator);
+  }
 
   /***********************************************************/
   /*      2- file reading    (read only mode)                */
