@@ -49,3 +49,9 @@ Develop a program that does the following:
     4. (bonus) Return variable number of steps
 
 ## Solution
+```bash
+$ gcc util.c parsing.c main.c -o exec ./exec
+```
+```bash
+$ ./exec
+```
