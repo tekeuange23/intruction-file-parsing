@@ -1,4 +1,5 @@
 #include "parsing.h"
+#include "util.h"
 
 void show_operations(Collection *collection, int iterator)
 {

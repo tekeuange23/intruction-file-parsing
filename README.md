@@ -51,16 +51,14 @@ Develop a program that does the following:
 ## Solution
 
 ### Enter
+
 ```bash
-$ gcc util.c parsing.c main.c -o exec
-```
-Then
-```bash
+$ make exec
 $ ./exec
 ```
-
 ### OR
 
 ```bash
-$ gcc util.c parsing.c main.c -o exec && ./exec ~ 
+$ gcc main.c parsing.c util.c -o exec
+$ ./exec
 ```
