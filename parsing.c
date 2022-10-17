@@ -3,15 +3,59 @@
 
 void show_operations(Collection *collection, int iterator)
 {
-  int i, j;
+  int i;
   for (i = 0; i < iterator; i++)
   {
-    // printf("DATA line[%d]: %d %d %d %d %d %d %d %s \n", i, collection[i]->id, collection[i]->scores[0], collection[i]->scores[1], collection[i]->scores[2], collection[i]->scores[3], collection[i]->scores[4], collection[i]->scores[5], collection[i]->name);
-    printf("DATA line[%d]: {%s} ", i, collection[i]->info.unaryOp.opName);
-    for (j = 0; j < INPUT_LIST_LENGTH; j++)
-    {
-      printf("%d ", collection[i]->info.unaryOp.param.array[j]);
-    }
-    printf("[%s] \n", collection[i]->type);
+    printf("line %d --> {%d} ", i + 1, collection[i]->info.unaryOp.opName);
+    show_array(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH);
   }
+}
+
+Collection *compute(Collection *collection, int iterator)
+{
+  Collection *result = (Collection *)malloc(iterator * sizeof(Collection));
+  if (result == NULL)
+    exit(0);
+  int i = 0;
+
+  while (i < iterator)
+  {
+    result[i] = (Operation *)malloc(sizeof(Operation));
+    result[i]->type = "unary";
+    if (result[i] == NULL)
+      exit(0);
+
+    result[i]->info.unaryOp.opName = collection[i]->info.unaryOp.opName;
+    int data;
+    switch (collection[i]->info.unaryOp.opName)
+    {
+    case SUM:
+      data = sum(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH);
+      printf("{ %s } : ", GET_VARIABLE_NAME(SUM));
+      printf("%d \n", data);
+      break;
+    case AVG:
+      data = avg(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH);
+      printf("{ %s } : ", GET_VARIABLE_NAME(AVG));
+      printf("%d \n", data);
+      break;
+    case SORT_ASC:
+      quick_sort(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH, 1);
+      printf("{ %s } : ", GET_VARIABLE_NAME(SORT_ASC));
+      show_array(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH);
+      break;
+    case SORT_DESC:
+      quick_sort(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH, 0);
+      printf("{ %s } : ", GET_VARIABLE_NAME(SORT_DESC));
+      show_array(collection[i]->info.unaryOp.param.array, INPUT_LIST_LENGTH);
+      break;
+
+    default:
+      break;
+    }
+
+    i++;
+  }
+
+  return result;
 }

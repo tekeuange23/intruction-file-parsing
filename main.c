@@ -45,7 +45,6 @@ int main(int argc, char **argv)
     printf("======== Size : %d =======\n", collection_iterator);
   }
 
-  // char buffer[collection_iterator][100];
   Collection *collection = (Collection *)malloc(collection_iterator * sizeof(Collection));
   if (collection == NULL)
     exit(0);
@@ -53,31 +52,35 @@ int main(int argc, char **argv)
 
   fseek(file, 0, SEEK_SET); // replace the cusor at the begining of the file
 
-  printf("======== Reading ========= ...\n");
+  printf("======== Reading Data Form File ========= ...\n");
   {
     while (!feof(file) && i < collection_iterator)
     {
       collection[i] = (Operation *)malloc(sizeof(Operation));
-      collection[i]->info.unaryOp.opName = (char *)malloc(OP_NAME_LENGTH * sizeof(char));
       collection[i]->type = "unary";
-      if (collection[i] == NULL || collection[i]->type == NULL || collection[i]->info.unaryOp.opName == NULL)
+      if (collection[i] == NULL)
         exit(0);
 
-      fscanf(file, "[#%d, #%d, #%d, #%d, #%d, #%d]; { %s }\n",
+      fscanf(file, "[#%d, #%d, #%d, #%d, #%d, #%d]; { %d }\n",
              &(collection[i]->info.unaryOp.param.array[0]),
              &(collection[i]->info.unaryOp.param.array[1]),
              &(collection[i]->info.unaryOp.param.array[2]),
              &(collection[i]->info.unaryOp.param.array[3]),
              &(collection[i]->info.unaryOp.param.array[4]),
              &(collection[i]->info.unaryOp.param.array[5]),
-             collection[i]->info.unaryOp.opName);
+             &(collection[i]->info.unaryOp.opName));
       i++;
     }
   }
 
-  printf("======== Printing ========\n");
+  printf("========== Logging Readed Data ==========\n");
   {
     show_operations(collection, collection_iterator);
+  }
+
+  printf("============== Computing ================\n");
+  {
+    compute(collection, collection_iterator);
   }
 
   /***********************************************************/
